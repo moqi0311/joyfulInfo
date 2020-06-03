@@ -5,6 +5,8 @@ import com.nowcoder.util.ToutiaoUtil;
 import com.qiniu.common.QiniuException;
 import com.qiniu.http.Response;
 import com.qiniu.storage.UploadManager;
+import com.qiniu.common.Zone;
+import com.qiniu.storage.Configuration;
 import com.qiniu.util.Auth;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,18 +22,23 @@ import java.util.UUID;
 @Service
 public class QiniuService {
     private static final Logger logger = LoggerFactory.getLogger(QiniuService.class);
+    //构造一个带指定 Region 对象的配置类
+    Zone z = Zone.zone2();  //华南 zone2 华东 zone0
+    Configuration cfg = new Configuration(z);
+
     //设置好账号的ACCESS_KEY和SECRET_KEY
-    String ACCESS_KEY = "abNXnXBIlI6viRaOeRY6Hk-zc3V-NpjLcGfYz5kD";
-    String SECRET_KEY = "QP7Xja3FmP1Zyl-oxwQDCb7T6wCoEFKoO-0vht_5";
+    String ACCESS_KEY = "ho2dpWGIjw1KaCwyAD-2x1lLjlS3P8Ksi_QIlpD7";
+    String SECRET_KEY = "NHV4bHfw3_5VNk5opztMp6_Gv6lZmlSSyrTJgAg5";
     //要上传的空间
-    String bucketname = "nowcoder";
+    String bucketname = "news-moqi";
 
     //密钥配置
     Auth auth = Auth.create(ACCESS_KEY, SECRET_KEY);
     //创建上传对象
-    UploadManager uploadManager = new UploadManager();
+    UploadManager uploadManager = new UploadManager(cfg);
 
-    private static String QINIU_IMAGE_DOMAIN = "http://7xsetu.com1.z0.glb.clouddn.com/";
+    private static String QINIU_IMAGE_DOMAIN = "http://qb1opj293.bkt.clouddn.com/";
+    private  static String PROFIX_FILENAME = "news/";
 
     //简单上传，使用默认策略，只需要设置上传的空间名就可以了
     public String getUpToken() {
@@ -49,7 +56,7 @@ public class QiniuService {
                 return null;
             }
 
-            String fileName = UUID.randomUUID().toString().replaceAll("-", "") + "." + fileExt;
+            String fileName = PROFIX_FILENAME + UUID.randomUUID().toString().replaceAll("-", "") + "." + fileExt;
             //调用put方法上传
             Response res = uploadManager.put(file.getBytes(), fileName, getUpToken());
             //打印返回的信息

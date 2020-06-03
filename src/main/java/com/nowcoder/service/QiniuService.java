@@ -4,8 +4,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.nowcoder.util.ToutiaoUtil;
 import com.qiniu.common.QiniuException;
 import com.qiniu.http.Response;
+import com.qiniu.storage.Region;
 import com.qiniu.storage.UploadManager;
-import com.qiniu.common.Zone;
 import com.qiniu.storage.Configuration;
 import com.qiniu.util.Auth;
 import org.slf4j.Logger;
@@ -23,8 +23,11 @@ import java.util.UUID;
 public class QiniuService {
     private static final Logger logger = LoggerFactory.getLogger(QiniuService.class);
     //构造一个带指定 Region 对象的配置类
-    Zone z = Zone.zone2();  //华南 zone2 华东 zone0
-    Configuration cfg = new Configuration(z);
+    Configuration cfg = new Configuration(Region.region2());
+
+//    //构造一个带指定 Region 对象的配置类
+//    Zone z = Zone.zone2();  //华南 zone2 华东 zone0
+//    Configuration cfg = new Configuration(z);
 
     //设置好账号的ACCESS_KEY和SECRET_KEY
     String ACCESS_KEY = "ho2dpWGIjw1KaCwyAD-2x1lLjlS3P8Ksi_QIlpD7";

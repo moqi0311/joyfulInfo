@@ -13,22 +13,6 @@
                                       <img alt="牛客网应用截图阅读精选" src="http://images.nowcoder.com/images/20141231/622873_1420036789276_622873_1420036771761_%E8%98%91%E8%8F%87.jpg@0e_200w_200h_0c_1i_1o_90Q_1x">
                                       <div class="carousel-caption">阅读精选</div>
                                     </div>
-                                    <div class="item active">
-                                      <img alt="牛客网应用截图订阅主题" src="http://images.nowcoder.com/images/20141231/622873_1420036789276_622873_1420036771761_%E8%98%91%E8%8F%87.jpg@0e_200w_200h_0c_1i_1o_90Q_1x">
-                                      <div class="carousel-caption">订阅主题</div>
-                                    </div>
-                                    <div class="item">
-                                      <img alt="牛客网应用截图分享干货" src="http://images.nowcoder.com/images/20141231/622873_1420036789276_622873_1420036771761_%E8%98%91%E8%8F%87.jpg@0e_200w_200h_0c_1i_1o_90Q_1x">
-                                      <div class="carousel-caption">分享干货</div>
-                                    </div>
-                                    <div class="item">
-                                      <img alt="牛客网应用截图兑换礼品" src="http://images.nowcoder.com/images/20141231/622873_1420036789276_622873_1420036771761_%E8%98%91%E8%8F%87.jpg@0e_200w_200h_0c_1i_1o_90Q_1x">
-                                      <div class="carousel-caption">兑换礼品</div>
-                                    </div>
-                                    <div class="item">
-                                      <img alt="牛客网应用截图建立品牌" src="http://images.nowcoder.com/images/20141231/622873_1420036789276_622873_1420036771761_%E8%98%91%E8%8F%87.jpg@0e_200w_200h_0c_1i_1o_90Q_1x">
-                                      <div class="carousel-caption">建立品牌</div>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -64,34 +48,36 @@
 
                     #set($cur_date = '')
                     #foreach($vo in $vos)
-                    #if ($cur_date != $date.format('yyyy-MM-dd', $vo.news.createdDate))
-                        #if ($foreach.index > 0)
-                            </div> ## 上一个要收尾
-                        #end
-                        #set($cur_date = $date.format('yyyy-MM-dd', $vo.news.createdDate))
-                    <h3 class="date">
-                        <i class="fa icon-calendar"></i>
-                        <span>头条资讯 &nbsp; $date.format('yyyy-MM-dd', $vo.news.createdDate)</span>
-                    </h3>
+                        #if ($cur_date != $date.format('yyyy-MM-dd', $vo.news.createdDate))
+                            #if ($foreach.index > 0)
+                                </div> ## 上一个要收尾
+                            #end
+                            #set($cur_date = $date.format('yyyy-MM-dd', $vo.news.createdDate))
+                            <h3 class="date">
+                                <i class="fa icon-calendar"></i>
+                                <span>欢乐集 &nbsp; $date.format('yyyy-MM-dd', $vo.news.createdDate)</span>
+                            </h3>
 
-                    <div class="posts">
-                    #end
+                            <div class="posts">
+                        #end
+
                         <div class="post">
                             <div class="votebar">
                                 #if ($vo.like > 0)
-                                <button class="click-like up pressed" data-id="$!{vo.news.id}" title="赞同"><i class="vote-arrow"></i><span class="count">$!{vo.news.likeCount}</span></button>
+                                    <button class="click-like up pressed" data-id="$!{vo.news.id}" title="赞同"><i class="vote-arrow"></i><span class="count">$!{vo.news.likeCount}</span></button>
                                 #else
-                                <button class="click-like up" data-id="$!{vo.news.id}" title="赞同"><i class="vote-arrow"></i><span class="count">$!{vo.news.likeCount}</span></button>
+                                    <button class="click-like up" data-id="$!{vo.news.id}" title="赞同"><i class="vote-arrow"></i><span class="count">$!{vo.news.likeCount}</span></button>
                                 #end
+
                                 #if($vo.like < 0)
-                                <button class="click-dislike down pressed" data-id="$!{vo.news.id}" title="反对"><i class="vote-arrow"></i></button>
+                                    <button class="click-dislike down pressed" data-id="$!{vo.news.id}" title="反对"><i class="vote-arrow"></i></button>
                                 #else
-                                <button class="click-dislike down" data-id="$!{vo.news.id}" title="反对"><i class="vote-arrow"></i></button>
+                                    <button class="click-dislike down" data-id="$!{vo.news.id}" title="反对"><i class="vote-arrow"></i></button>
                                 #end
                             </div>
                             <div class="content">
                                 <div >
-                                    <img class="content-img" src="$!{vo.news.image}" alt="">
+                                    <img class="content-img" src="$!{vo.news.image}?imageView2/0/w/100/h/80/" alt="">
                                 </div>
                                 <div class="content-main">
                                     <h3 class="title">
@@ -130,9 +116,9 @@
                           《头条八卦》，每日 Top 3 通过邮件发送给你。      <a class="btn btn-info btn-sm pull-right" href="http://nowcoder.com/account/settings">立即订阅</a>
                         </div>
                         -->
-                    #if ($foreach.count == $vos.size()) ##最后有个元素要收尾
-                    </div>
-                    #end
+                        #if ($foreach.count == $vos.size()) ##最后有个元素要收尾
+                        </div>
+                        #end
 
                     #end
 
@@ -145,10 +131,10 @@
 
 
 #if ($pop)
-<script>
-window.loginpop = $!{pop};
-</script>
-<script type="text/javascript" src="/scripts/main/site/home.js"></script>
+    <script>
+        window.loginpop = $!{pop};
+    </script>
+    <script type="text/javascript" src="/scripts/main/site/home.js"></script>
 #end
 
 #parse("footer.html")

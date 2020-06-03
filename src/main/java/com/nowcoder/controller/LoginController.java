@@ -85,8 +85,8 @@ public class LoginController {
             }
 
         } catch (Exception e) {
-            logger.error("注册异常" + e.getMessage());
-            return ToutiaoUtil.getJSONString(1, "注册异常");
+            logger.error("登录异常" + e.getMessage());
+            return ToutiaoUtil.getJSONString(1, "登录异常");
         }
     }
 

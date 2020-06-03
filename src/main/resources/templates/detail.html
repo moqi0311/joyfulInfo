@@ -17,8 +17,8 @@
             </div>
 
             <div class="content">
-                <div class="content-img">
-                    <img src="$!{news.image}" alt="">
+                <div>
+                    <img class="content-img" src="$!{news.image}?imageView2/0/w/100/h/80/" alt="">
                 </div>
                 <div class="content-main">
                     <h3 class="title">
@@ -84,7 +84,8 @@
             </form>
             #else
             <div class="login-actions">
-                <a class="btn btn-success" href="/?pop=1">登录后评论</a>
+<!--                <li class="js-login"><a href="javascript:void(0);">登陆</a></li>-->
+                <a class="btn btn-success js-login" href="javascript:void(0);">登录后评论</a>
             </div>
             #end
         </div>

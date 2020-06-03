@@ -109,5 +109,6 @@ public class UserService {
 
     public void logout(String ticket) {
         loginTicketDAO.updateStatus(ticket, 1);
+//        loginTicketDAO.deleteTickets(ticket);
     }
 }

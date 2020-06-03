@@ -22,4 +22,7 @@ public interface LoginTicketDAO {
 
     @Update({"update ", TABLE_NAME, " set status=#{status} where ticket=#{ticket}"})
     void updateStatus(@Param("ticket") String ticket, @Param("status") int status);
+
+    @Delete({"delete ", "from", TABLE_NAME, "where ticket=#{ticket}"})
+    void deleteTickets(@Param("ticket") String ticket);
 }

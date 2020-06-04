@@ -18,6 +18,7 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 /**
  * Created by nowcoder on 2016/7/2.
@@ -40,6 +41,11 @@ public class NewsService {
 
         //敏感词过滤
         news.setTitle(sensitiveService.filter(news.getTitle()));
+
+        //正则表达式检测网址是否合理
+        String pattern = "^(http://|ftp://|https://)[^\u4e00-\u9fa5\\s]*?\\.(com|net|cn|me|tw|fr)[^\u4e00-\u9fa5\\s]*";
+        boolean isMatch = Pattern.matches(pattern, news.getLink());
+
 
         newsDAO.addNews(news);
         return news.getId();

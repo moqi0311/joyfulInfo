@@ -4,6 +4,7 @@ import com.nowcoder.dao.CommentDAO;
 import com.nowcoder.model.Comment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.HtmlUtils;
 
 import javax.websocket.server.ServerEndpoint;
 import java.util.List;
@@ -21,6 +22,8 @@ public class CommentService {
     }
 
     public int addComment(Comment comment) {
+        //HTML过滤
+        comment.setContent(HtmlUtils.htmlEscape(comment.getContent()));
         return commentDAO.addComment(comment);
     }
 

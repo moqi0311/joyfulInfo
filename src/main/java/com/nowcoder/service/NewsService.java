@@ -10,6 +10,7 @@ import org.apache.velocity.texen.util.FileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.util.HtmlUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,6 +32,11 @@ public class NewsService {
     }
 
     public int addNews(News news) {
+        //HTML过滤
+        news.setTitle(HtmlUtils.htmlEscape(news.getTitle()));
+
+        //敏感词过滤
+
         newsDAO.addNews(news);
         return news.getId();
     }

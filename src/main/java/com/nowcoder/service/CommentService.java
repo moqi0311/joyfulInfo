@@ -17,6 +17,9 @@ public class CommentService {
     @Autowired
     private CommentDAO commentDAO;
 
+    @Autowired
+    private  SensitiveService sensitiveService;
+
     public List<Comment> getCommentsByEntity(int entityId, int entityType) {
         return commentDAO.selectByEntity(entityId, entityType);
     }
@@ -24,6 +27,8 @@ public class CommentService {
     public int addComment(Comment comment) {
         //HTML过滤
         comment.setContent(HtmlUtils.htmlEscape(comment.getContent()));
+        //敏感词过滤
+        comment.setContent(sensitiveService.filter(comment.getContent()));
         return commentDAO.addComment(comment);
     }
 

@@ -5,14 +5,16 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * creat 2020.06.04
+ */
 @Service
 public class SensitiveService implements InitializingBean {
 
@@ -21,7 +23,7 @@ public class SensitiveService implements InitializingBean {
     /**
      * 默认敏感词替换符
      */
-    private static final String DEFAULT_REPLACEMENT = "敏感词";
+    private static final String DEFAULT_REPLACEMENT = "**";
 
 
     private class TrieNode {
@@ -79,6 +81,64 @@ public class SensitiveService implements InitializingBean {
         int ic = (int) c;
         // 0x2E80-0x9FFF 东亚文字范围
         return !CharUtils.isAsciiAlphanumeric(c) && (ic < 0x2E80 || ic > 0x9FFF);
+    }
+
+    /**
+     * 是否包含颜文字
+     */
+    public boolean hasOtherWord(String text){
+        for (int i = 0; i < text.length(); i++) {
+            char c =  text.charAt(i);
+            int ic = (int)c;
+            if(!CharUtils.isAsciiAlphanumeric(c) && (ic < 0x2E80 || ic > 0x9FFF))
+                return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * 是否敏感词
+     */
+    public boolean isSensitive(String text){
+        if (StringUtils.isBlank(text)) {
+            return true;
+        }
+
+        TrieNode tempNode = rootNode;
+        int begin = 0; // 回滚数
+        int position = 0; // 当前比较的位置
+
+        while (position < text.length()) {
+            char c = text.charAt(position);
+            // 空格直接跳过
+            if (isSymbol(c)) {
+                if (tempNode == rootNode) {
+                    ++begin;
+                }
+                ++position;
+                continue;
+            }
+
+            tempNode = tempNode.getSubNode(c);
+
+            // 当前位置的匹配结束
+            if (tempNode == null) {
+                // 跳到下一个字符开始测试
+                position = begin + 1;
+                begin = position;
+                // 回到树初始节点
+                tempNode = rootNode;
+            } else if (tempNode.isKeywordEnd()) {
+                // 发现敏感词， 从begin到position的位置用replacement替换掉
+                logger.error("输入的文字：", text);
+                return  true;
+            } else {
+                ++position;
+            }
+        }
+
+        return false;
     }
 
 
@@ -166,16 +226,25 @@ public class SensitiveService implements InitializingBean {
         rootNode = new TrieNode();
 
         try {
-            InputStream is = Thread.currentThread().getContextClassLoader()
-                    .getResourceAsStream("SensitiveWords.txt");
-            InputStreamReader read = new InputStreamReader(is);
-            BufferedReader bufferedReader = new BufferedReader(read);
+            // ClassPathResource类的构造方法接收路径名称，自动去classpath路径下找文件
+            ClassPathResource classPathResource = new ClassPathResource("SensitiveWords.txt");
+
+            // 获得File对象，当然也可以获取输入流对象
+            File file = classPathResource.getFile();
+
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+
+//            InputStream is = Thread.currentThread().getContextClassLoader()
+//                    .getResourceAsStream("SensitiveWords.txt");
+//            InputStreamReader read = new InputStreamReader(is);
+//            BufferedReader bufferedReader = new BufferedReader(read);
+
             String lineTxt;
             while ((lineTxt = bufferedReader.readLine()) != null) {
                 lineTxt = lineTxt.trim();
                 addWord(lineTxt);
             }
-            read.close();
+            //read.close();
         } catch (Exception e) {
             logger.error("读取敏感词文件失败" + e.getMessage());
         }
@@ -185,6 +254,6 @@ public class SensitiveService implements InitializingBean {
         SensitiveService s = new SensitiveService();
         s.addWord("色情");
         s.addWord("好色");
-        System.out.print(s.filter("你好X色**情XX"));
+        System.out.print(s.filter("你好X色 * a情XX"));
     }
 }

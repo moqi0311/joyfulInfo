@@ -27,6 +27,9 @@ public class NewsService {
     @Autowired
     private NewsDAO newsDAO;
 
+    @Autowired
+    private SensitiveService sensitiveService;
+
     public List<News> getLatestNews(int userId, int offset, int limit) {
         return newsDAO.selectByUserIdAndOffset(userId, offset, limit);
     }
@@ -36,6 +39,7 @@ public class NewsService {
         news.setTitle(HtmlUtils.htmlEscape(news.getTitle()));
 
         //敏感词过滤
+        news.setTitle(sensitiveService.filter(news.getTitle()));
 
         newsDAO.addNews(news);
         return news.getId();

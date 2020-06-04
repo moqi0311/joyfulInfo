@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.HtmlUtils;
 
 import java.util.*;
 
@@ -24,6 +25,9 @@ public class UserService {
 
     @Autowired
     private LoginTicketDAO loginTicketDAO;
+
+    @Autowired
+    private  SensitiveService sensitiveService;
 
     public Map<String, Object> register(String username, String password) {
         Map<String, Object> map = new HashMap<String, Object>();
@@ -44,7 +48,23 @@ public class UserService {
             return map;
         }
 
-        // 密码强度
+        //用户民规范,不能颜文字，HTML处理
+        username = HtmlUtils.htmlEscape(username);
+        if(sensitiveService.hasOtherWord(username)){
+            map.put("msgname", "用户名不能含颜文字或空格");
+            return map;
+        }
+
+        //用户名敏感词
+        if(sensitiveService.isSensitive(username)){
+            map.put("msgname", "用户名含有敏感词");
+            return map;
+        }
+
+
+        //密码强度
+
+        //入库
         user = new User();
         user.setName(username);
         user.setSalt(UUID.randomUUID().toString().substring(0, 5));

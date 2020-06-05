@@ -39,7 +39,7 @@ public class HomeController {
     MailSender mailSender;
 
     private int limit = 3;
-    private int pageShow = 3;
+    private int pageShow = 5;
 
     private List<ViewObject> getNews(int userId, int offset, int limit) {
         List<News> newsList = newsService.getLatestNews(userId, offset, limit);
@@ -80,8 +80,11 @@ public class HomeController {
         //分页
         List<Integer> pageList = getPagesList(0, index, limit, pageShow);
 
+        model.addAttribute("doman", "/?index=");
         model.addAttribute("pages", pageList);
         model.addAttribute("curpage", index);
+        model.addAttribute("lastpages", pageList.get(pageList.size()-1));
+
 
         return "home";
     }
@@ -91,6 +94,15 @@ public class HomeController {
                             @RequestParam(value = "index", defaultValue = "0") int index,
                             @PathVariable("userId") int userId) {
         model.addAttribute("vos", getNews(userId, 0, limit));
+
+        //分页
+        List<Integer> pageList = getPagesList(userId, index, limit, pageShow);
+
+        model.addAttribute("doman", "/user/" + userId + "?index=");
+        model.addAttribute("pages", pageList);
+        model.addAttribute("curpage", index);
+        model.addAttribute("lastpages", pageList.get(pageList.size()-1));
+
         return "home";
     }
 

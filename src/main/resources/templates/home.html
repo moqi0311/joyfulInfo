@@ -128,18 +128,29 @@
         <!--        <a href="javascript:;" id="zh-load-more" data-method="next" class="zg-btn-white zg-r3px zu-button-more" style="">更多</a></div>-->
 
         <div class="page">
-
-            <span>上一页</span>
-            #foreach($page in $pages)
-            #set($index=$page+1)
-            #if($curpage == $page)
-            <a href="/index?index=$!{page}"><b>$index</b></a>
+            #if ($curpage > 0)
+                #set($pre=$curpage + (-1))
+                <a href="$!{doman}$!{pre}">上一页</a>
             #else
-            <a href="/index?index=$!{page}">$index</a>
+                <span>上一页</span>
             #end
 
+            #foreach($page in $pages)
+                #set($index=$page+1)
+                #if ($curpage == $page)
+                    <a href="$!{doman}$!{page}"><b>$index</b></a>
+                #else
+                    <a href="$!{doman}$!{page}">$index</a>
+                #end
             #end
-            <span>下一页</span>
+
+            #if ($curpage < $lastpages)
+                #set($last=$curpage+1)
+                <a href="$!{doman}$!{last}">下一页</a>
+            #else
+                <span>下一页</span>
+            #end
+
         </div>
 
         </div>

@@ -32,3 +32,4 @@
 
 #### 主页新闻分页阅读
 * 分页前端代码参考：[百度经验](https://jingyan.baidu.com/article/19192ad804c81fe53e57072e.html)
+* 主页分页前后端完成：可以在HomeController中设置一次显示多少个资讯（limit），也可以设置显示几个分页（pageShow）

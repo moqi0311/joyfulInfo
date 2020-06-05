@@ -1,0 +1,89 @@
+第2课：
+SpringBoot
+HTTP常用方法，Request/Response/Session，重定向
+Velocity模板语法
+Logger日志
+IOC/AOP切面
+
+第3课：
+mysql设计，CRUD
+Mybatis，注解和xml配置方法
+Velocity的html配置和DataTool使用
+三层模型搭建首页（资讯展示和点到某个具体的人下面）
+POSTMAN使用
+
+第4课：
+业务：注册、登录、浏览、登出
+知识点：
+	InterCeptor拦截器、
+	FastJSO：可传给前端用来显示，https://mvnrepository.com/
+	MD5加密（用salt增加加密）、
+	AJAX（异步加载界面，只是提到了）、
+	DEV-TOOL: 热插拔（引入POM即可）、
+	提到saveAction(保存即完成热编译，不用自己编译)
+技术点：
+	token(ticket）验证：在拦截器里进行先验证，然后存到ThreadLocal里，在整个结束后调用remove清除
+	ThreadLocal：
+	Interceptor: 
+		和AOP不同，AOP执行在具体某个方法上，分四个部分，而interceptor是在web请求的不同阶段执行，分为三个阶段
+	重写三个方法，分别是：
+		preHandle：在访问这个链接前，查看ticket，有的话就把这个ticket对应的user保存（这里返回true才有后面的事，否则没后面的事了）
+		postHandle：在登录前，将model加入这个信息先渲染再显示（先加载界面信息，在和这里的一起渲染）
+		afterCompletion：在这个访问结束的时候，删掉这个user，保证不产生垃圾数组
+	三个方法和被访问Controler的访问顺序：preHandle -- 界面 -- postHandle -- afterCompletion
+	配置：ToutiaoWebConfiguration继承WebMvcConfigurerAdapter
+		重写加载器：分前后注册加载器，			
+		addPathPatterns：用来定义作用范围
+		
+第5节课
+业务：发布自己的资讯（包括上传图片和分享内容）
+知识点：
+	图片上传：MultipartFile使用
+	CDN加速解析
+	七牛云的SDK熟悉
+技术点：
+	Fiddler使用，查看HTTP的请求和响应（目前没有装成功）
+
+第6节课
+业务：评论详情页、增加评论、站内信分会话显示，站内信详情
+知识点：
+技术点：
+	SQL设计，评论中心和会话中心
+		评论中心：不具体指定某种id，而是由id和type共同组成，这样可以增加任何类型的评论
+		会话中心，有from, to, 和会话id，用来区分两个人之间的所有对话
+
+第7节课
+业务：点赞点踩
+知识点：
+	redis及jedis的使用
+	jedis只有8个线程池
+	redis业务应用场景
+技术点：
+
+第8节课
+业务：点赞发送站内信，登录邮件和站内信发送
+知识点：
+	json序列化对象到redis，然后从redis取出消费
+	异步生产者消费者模型
+技术点：
+	异步处理
+
+
+第9节课
+业务：
+知识点：
+技术点：
+
+
+
+
+
+
+
+
+
+
+
+
+
+

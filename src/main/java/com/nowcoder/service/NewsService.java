@@ -16,7 +16,9 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
@@ -35,20 +37,31 @@ public class NewsService {
         return newsDAO.selectByUserIdAndOffset(userId, offset, limit);
     }
 
-    public int addNews(News news) {
+    public Map<String, Object> addNews(News news) {
+        Map<String, Object> map = new HashMap<>();
         //HTML过滤
         news.setTitle(HtmlUtils.htmlEscape(news.getTitle()));
 
         //敏感词过滤
-        news.setTitle(sensitiveService.filter(news.getTitle()));
+        boolean hasSensitive =  sensitiveService.isSensitive(news.getTitle());
+        if(hasSensitive){
+            map.put("msgtitle","包含敏感词，请修改");
+            return map;
+        }
 
         //正则表达式检测网址是否合理
         String pattern = "^(http://|ftp://|https://)[^\u4e00-\u9fa5\\s]*?\\.(com|net|cn|me|tw|fr)[^\u4e00-\u9fa5\\s]*";
         boolean isMatch = Pattern.matches(pattern, news.getLink());
 
 
+        if(!isMatch){
+            map.put("msglink","链接格式不正确，请以http/https/ftp开头");
+            return map;
+        }
+
         newsDAO.addNews(news);
-        return news.getId();
+        map.put("userid", news.getId());
+        return map;
     }
 
     public News getById(int newsId) {

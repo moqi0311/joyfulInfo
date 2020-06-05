@@ -19,6 +19,7 @@ import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by nowcoder on 2016/7/2.
@@ -142,8 +143,12 @@ public class NewsController {
                 // 设置一个匿名用户
                 news.setUserId(3);
             }
-            newsService.addNews(news);
-            return ToutiaoUtil.getJSONString(0);
+            Map<String, Object> map = newsService.addNews(news);
+            if(map.containsKey("userid")){
+                return ToutiaoUtil.getJSONString(0);
+            }else{
+                return ToutiaoUtil.getJSONString(1, map);
+            }
         } catch (Exception e) {
             logger.error("添加资讯失败" + e.getMessage());
             return ToutiaoUtil.getJSONString(1, "发布失败");

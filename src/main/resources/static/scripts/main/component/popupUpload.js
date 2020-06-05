@@ -79,7 +79,16 @@ var oPopupUpload = new PopupUpload({
                     data: {image: that.image, title: sTitle, link: sLink},
                     dataType: 'json'
                 }).done(function (oResult) {
-                    that.emit('done');
+                    if (oResult.code === 0) {
+                        that.emit('done');
+                    } else {
+                        oResult.msglink && alert(oResult.msglink)
+                        oResult.msgtitle && alert(oResult.msgtitle);
+                         //oResult.link && that.iptError(that.getEl, oResult.link);
+                        // oResult.msgpwd && that.iptError(that.pwdIpt, oResult.msgpwd);
+                    }
+
+
                 }).fail(function (oResult) {
                     alert('出现错误，请重试');
                 }).always(function () {

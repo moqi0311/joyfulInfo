@@ -5,6 +5,7 @@
     <sql id="table">news</sql>
     <sql id="selectFields">id,title, link, image, like_count, comment_count,created_date,user_id
     </sql>
+    <sql id="selectCount">COUNT(id) AS count</sql>
     <select id="selectByUserIdAndOffset" resultType="com.nowcoder.model.News">
         SELECT
         <include refid="selectFields"/>
@@ -16,5 +17,15 @@
         </if>
         ORDER BY id DESC
         LIMIT #{offset},#{limit}
+    </select>
+    <select id="selectByUserIdCount" resultType="int">
+        SELECT
+        <include refid="selectCount"/>
+        FROM
+        <include refid="table"/>
+
+        <if test="userId != 0">
+            WHERE user_id = #{userId}
+        </if>
     </select>
 </mapper>

@@ -125,9 +125,26 @@
 
                 </div>
             </div>
+        <!--        <a href="javascript:;" id="zh-load-more" data-method="next" class="zg-btn-white zg-r3px zu-button-more" style="">更多</a></div>-->
+
+        <div class="page">
+
+            <span>上一页</span>
+            #foreach($page in $pages)
+            #set($index=$page+1)
+            #if($curpage == $page)
+            <a href="/index?index=$!{page}"><b>$index</b></a>
+            #else
+            <a href="/index?index=$!{page}">$index</a>
+            #end
+
+            #end
+            <span>下一页</span>
         </div>
 
-    </div>
+        </div>
+
+</div>
 
 
 #if ($pop)

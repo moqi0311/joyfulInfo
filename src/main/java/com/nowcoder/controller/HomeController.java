@@ -38,6 +38,9 @@ public class HomeController {
     @Autowired
     MailSender mailSender;
 
+    private int limit = 3;
+    private int pageShow = 3;
+
     private List<ViewObject> getNews(int userId, int offset, int limit) {
         List<News> newsList = newsService.getLatestNews(userId, offset, limit);
         int localUserId = hostHolder.getUser() != null ? hostHolder.getUser().getId() : 0;
@@ -56,20 +59,38 @@ public class HomeController {
         return vos;
     }
 
+    public List<Integer> getPagesList(int userId, int curPage, int limit, int pageShow){
+        List<Integer> pagesList = newsService.getPagesList(userId, curPage, limit, pageShow);
+
+        return  pagesList;
+    }
+
     @RequestMapping(path = {"/", "/index"}, method = {RequestMethod.GET, RequestMethod.POST})
     public String index(Model model,
+                        @RequestParam(value = "index", defaultValue = "0") int index,
                         @RequestParam(value = "pop", defaultValue = "0") int pop) {
-        model.addAttribute("vos", getNews(0, 0, 10));
+
+        model.addAttribute("vos", getNews(0, index*limit, limit));
+
         if (hostHolder.getUser() != null) {
             pop = 0;
         }
         model.addAttribute("pop", pop);
+
+        //分页
+        List<Integer> pageList = getPagesList(0, index, limit, pageShow);
+
+        model.addAttribute("pages", pageList);
+        model.addAttribute("curpage", index);
+
         return "home";
     }
 
     @RequestMapping(path = {"/user/{userId}"}, method = {RequestMethod.GET, RequestMethod.POST})
-    public String userIndex(Model model, @PathVariable("userId") int userId) {
-        model.addAttribute("vos", getNews(userId, 0, 10));
+    public String userIndex(Model model,
+                            @RequestParam(value = "index", defaultValue = "0") int index,
+                            @PathVariable("userId") int userId) {
+        model.addAttribute("vos", getNews(userId, 0, limit));
         return "home";
     }
 

@@ -7247,3 +7247,130 @@ textarea[readonly] {
   color: red;
 }
 
+
+
+
+
+
+
+.top-nav-profile {
+  float: right;
+  position: relative;
+  min-width: 120px;
+  margin-left: 15px;
+  z-index: 10
+}
+
+.top-nav-profile a {
+  display: block;
+  width: 120px;
+  background-color: #31363D;
+  text-shadow: 0 1px 1px rgba(0,0,0,.12);
+  font-size: 14px
+}
+
+.top-nav-profile .top-nav-dropdown {
+  top: 46px
+}
+
+.top-nav-profile .top-nav-dropdown a {
+  width: 120px
+}
+
+
+.open .top-nav-dropdown,html.no-touchevents .top-nav-profile:hover .top-nav-dropdown {
+  display: block
+}
+
+.top-nav-profile .zu-top-nav-userinfo {
+  position: relative;
+  height: 45px;
+  line-height: 45px;
+  text-indent: 46px;
+  color: #888;
+  text-decoration: none;
+  border-top: 0;
+  background: transparent;
+  box-shadow: none;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden
+}
+
+.zu-top-nav-userinfo.selected,html.no-touchevents .top-nav-profile:hover .zu-top-nav-userinfo {
+  height: 46px!important;
+  background: #31363D;
+  /*background: -webkit-linear-gradient(top,#055fb8,#095fb3);
+  background: linear-gradient(to bottom,#055fb8,#095fb3);*/
+  box-shadow: inset 0 0 2px rgba(0,0,0,.12);
+  color: #fff;
+}
+
+html.no-touchevents .zu-top-nav-userinfo:hover {
+  background-color: #31363D
+}
+
+.zu-top-nav-userinfo .Avatar {
+  position: absolute;
+  top: 9px;
+  left: 10px;
+  border: 1px solid rgba(0,0,0,.1);
+  box-shadow: 0 1px 0 rgba(255,255,255,.1);
+  background-color: transparent
+}
+
+.zu-top-nav-count,.zu-top-nav-userinfo .zu-top-nav-pm-count {
+  z-index: 12;
+  top: 5px;
+  position: absolute
+}
+
+.zu-top-nav-count {
+  left: 31px
+}
+
+.zu-top-nav-userinfo .zu-top-nav-pm-count {
+  left: 29px
+}
+
+.top-nav-profile .top-nav-dropdown .zu-top-nav-pm-count {
+  vertical-align: 1px;
+  margin-left: 8px
+}
+
+.top-nav-profile .top-nav-dropdown .zu-top-nav-pm-count {
+  vertical-align: 1px;
+  margin-left: 8px
+}
+
+
+.topnav-noauth {
+  float:right;
+  margin:8px 0 0 15px;
+  line-height:46px
+}
+.topnav-noauth .zg-icon {
+  width:20px;
+  height:20px;
+  margin-right:6px
+}
+.topnav-noauth a {
+  padding:0 10px;
+  width:auto;
+  height:46px;
+  line-height:46px;
+  text-align:center;
+  display:block;
+  color:#eee;
+  text-shadow:0 1px 1px rgba(0,0,0,.12);
+  white-space:nowrap;
+  font-size:14px
+}
+.topnav-noauth a:hover {
+  color:#fff;
+  text-decoration:none
+}
+.topnav-noauth>li {
+  float:left;
+  list-style:none
+}

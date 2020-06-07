@@ -1,14 +1,17 @@
 (function (window, undefined) {
     var PopupLogin = Base.getClass('main.component.PopupLogin');
     var PopupUpload = Base.getClass('main.component.PopupUpload');
+    var PopupMsg = Base.getClass('main.component.PopupMsg');
     var ActionUtil = Base.getClass('main.util.Action');
+
 
     Base.ready({
         initialize: fInitialize,
         binds: {
             //.表示class #表示id
             'click .js-login': fClickLogin,
-            'click .js-share': fClickShare
+            'click .js-share': fClickShare,
+            'click .js-sendmsg': fClickMsg
         },
         events: {
             'click button.click-like': fClickLike,
@@ -44,6 +47,15 @@
                     //alert('reg');
                     window.location.reload();
                 }
+            }
+        });
+    }
+
+    function fClickMsg() {
+        var that = this;
+        PopupMsg.show({
+            ok: function () {
+                window.location.replace("/msg/list");
             }
         });
     }

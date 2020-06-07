@@ -29,6 +29,10 @@ public class UserService {
     @Autowired
     private  SensitiveService sensitiveService;
 
+    public User selectByName(String name) {
+        return userDAO.selectByName(name);
+    }
+
     public Map<String, Object> register(String username, String password) {
         Map<String, Object> map = new HashMap<String, Object>();
         if (StringUtils.isBlank(username)) {

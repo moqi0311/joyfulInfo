@@ -97,11 +97,13 @@ public class HomeController {
 
         //分页
         List<Integer> pageList = getPagesList(userId, index, limit, pageShow);
-
         model.addAttribute("doman", "/user/" + userId + "?index=");
         model.addAttribute("pages", pageList);
         model.addAttribute("curpage", index);
         model.addAttribute("lastpages", pageList.get(pageList.size()-1));
+
+        //个人资讯主页
+        model.addAttribute("user", 1);
 
         return "home";
     }

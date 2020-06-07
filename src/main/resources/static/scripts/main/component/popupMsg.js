@@ -1,35 +1,32 @@
 (function (window) {
-    var PopupLogin = Base.createClass('main.component.PopupLogin');
+    var PopupMsg = Base.createClass('main.component.PopupMsg');
     var Popup = Base.getClass('main.component.Popup');
     var Component = Base.getClass('main.component.Component');
     var Util = Base.getClass('main.base.Util');
 
-    Base.mix(PopupLogin, Component, {
+    Base.mix(PopupMsg, Component, {
         _tpl: [
             '<div class="wrapper-content clearfix">',
-                '<div class="input-section">',
-                    '<div class="form-group">',
-                        '<label class="control-label">用户名</label>',
-                        '<div class="control-group js-email"><input type="email" placeholder="请输入用户名"></div>',
-                    '</div>',
+            '<div class="input-section">',
 
+            '<div class="form-group"> ',
+            '<label >发给:</label>',
+            '<div class="js-email " ><input style="width:500px;" type="email" placeholder="姓名"></div>',
+            '</div>',
 
-                    '<div class="form-group">',
-                        '<label class="control-label">密码</label>',
-                        '<div class="control-group js-pwd"><input type="password" placeholder="请输入密码"></div>',
-                    '</div>',
-                    '<div class="form-group about-pwd">',
-                        '<div class="keep-pwd">',
-                            '<label><input type="checkbox" class="js-rember"> 记住登录</label>',
-                        '</div>',
-                    '</div>',
-                    '<div class="form-group">',
-                        '<div class="col-input-login">',
-                            '<a class="btn btn-info js-login" href="javascript:void(0);">登陆</a>',
-                            '<a class="btn btn-info js-register" href="javascript:void(0);">注册</a>',
-                        '</div>',
-                    '</div>',
-                '</div>',
+            '<div class="form-group">',
+            '<label >内容:</label>',
+            '<div >',
+            '<textarea class="js-pwd" placeholder="私信内容" style="font-style:italic;width:500px;"></textarea>',
+            '</div>',
+            '</div>',
+
+            '<div class="form-group">',
+            '<div class="col-input-login">',
+            '<a class="btn btn-info js-register" style="width: border-box" href="javascript:void(0);">发送</a>',
+            '</div>',
+            '</div>',
+            '</div>',
             '</div>'].join(''),
         listeners: [{
             name: 'render',
@@ -38,39 +35,8 @@
                 var that = this;
                 var oEl = that.getEl();
                 that.emailIpt = oEl.find('div.js-email');
-                that.pwdIpt = oEl.find('div.js-pwd');
+                that.pwdIpt = oEl.find('.js-pwd');
                 that.initCpn();
-            }
-        }, {
-            name: 'click a.js-login',
-            handler: function (oEvent) {
-                oEvent.preventDefault();
-                var that = this;
-                // 值检查
-                if (!that.checkVal()) {
-                    return;
-                }
-                var oData = that.val();
-                $.ajax({
-                    url: '/login/',
-                    type: 'post',
-                    dataType: 'json',
-                    data: {
-                        username: oData.email,
-                        password: oData.pwd,
-                        rember: oData.rember ? 1 : 0
-                    }
-                }).done(function (oResult) {
-                    if (oResult.code === 0) {
-//                        window.location.reload();
-                        that.emit('login');
-                    } else {
-                        oResult.msgname && that.iptError(that.emailIpt, oResult.msgname);
-                        oResult.msgpwd && that.iptError(that.pwdIpt, oResult.msgpwd);
-                    }
-                }).fail(function () {
-                    alert('出现错误，请重试');
-                });
             }
         }, {
             name: 'click a.js-register',
@@ -81,22 +47,26 @@
                 if (!that.checkVal()) {
                     return;
                 }
+                alert("开始");
                 var oData = that.val();
                 $.ajax({
-                    url: '/reg/',
+                    url: '/msg/addMessage',
                     type: 'post',
                     dataType: 'json',
                     data: {
-                        username: oData.email,
-                        password: oData.pwd
+                        toName: oData.email,
+                        content: oData.pwd
                     }
                 }).done(function (oResult) {
                     if (oResult.code === 0) {
 //                        window.location.reload();
                         that.emit('register');
+                    } else if(oResult.code === 999){
+                        //待会修改
+                        window.location.href = '/reglogin?next=' + window.encodeURIComponent(window.location.href);
                     } else {
-                        oResult.msgname && that.iptError(that.emailIpt, oResult.msgname);
-                        oResult.msgpwd && that.iptError(that.pwdIpt, oResult.msgpwd);
+                        oResult.msgname && alert(oResult.msgname);
+                        oResult.msgpwd && alert(oResult.msgpwd);
                     }
                 }).fail(function () {
                     alert('出现错误，请重试');
@@ -116,10 +86,10 @@
 
     function fStaticShow(oConf) {
         var that = this;
-        var oLogin = new PopupLogin(oConf);
+        var oLogin = new PopupMsg(oConf);
         var oPopup = new Popup({
             width: 540,
-            title: '登录',
+            title: '发送私信',
             content: oLogin.html()
         });
         oLogin._popup = oPopup;
@@ -129,7 +99,7 @@
     function fInitialize(oConf) {
         var that = this;
         delete oConf.renderTo;
-        PopupLogin.superClass.initialize.apply(that, arguments);
+        PopupMsg.superClass.initialize.apply(that, arguments);
     }
 
     function fInitCpn() {
@@ -166,11 +136,12 @@
             that.iptError(that.emailIpt, '请填写正确的邮箱');
             bRight = false;
         }*/
-        if (!oData.pwd) {
-            that.iptError(that.pwdIpt, '密码不能为空');
+        alert("1111");
+        if (!oData.email) {
+            alert('请填写姓名');
             bRight = false;
-        } else if (oData.pwd.length < 6) {
-            that.iptError(that.pwdIpt, '密码不能小于6位');
+        }else if (!oData.pwd) {
+            alert('请填写私信内容');
             bRight = false;
         }
         return bRight;

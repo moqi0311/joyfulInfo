@@ -85,21 +85,49 @@ public class MessageController {
 
     @RequestMapping(path = {"/msg/addMessage"}, method = {RequestMethod.POST})
     @ResponseBody
-    public String addMessage(@RequestParam("fromId") int fromId,
-                             @RequestParam("toId") int toId,
+    public String addMessage(@RequestParam("toName") String toName,
                              @RequestParam("content") String content) {
         try {
-            Message msg = new Message();
-            msg.setContent(content);
-            msg.setFromId(fromId);
-            msg.setToId(toId);
-            msg.setCreatedDate(new Date());
-            //msg.setConversationId(fromId < toId ? String.format("%d_%d", fromId, toId) : String.format("%d_%d", toId, fromId));
-            messageService.addMessage(msg);
-            return ToutiaoUtil.getJSONString(msg.getId());
+            if (hostHolder.getUser() == null) {
+                return ToutiaoUtil.getJSONString(999, "未登录");
+            }
+
+            User user = userService.selectByName(toName);
+            if (user == null) {
+                return ToutiaoUtil.getJSONString(1, "用户不存在");
+            }
+
+            Message message = new Message();
+            message.setCreatedDate(new Date());
+            message.setFromId(hostHolder.getUser().getId());
+            message.setToId(user.getId());
+            message.setContent(content);
+            messageService.addMessage(message);
+            return ToutiaoUtil.getJSONString(0);
+
         } catch (Exception e) {
-            logger.error("增加评论失败" + e.getMessage());
-            return ToutiaoUtil.getJSONString(1, "插入评论失败");
+            logger.error("发送消息失败" + e.getMessage());
+            return ToutiaoUtil.getJSONString(1, "发信失败");
         }
     }
+
+//    @RequestMapping(path = {"/msg/addMessage"}, method = {RequestMethod.POST})
+//    @ResponseBody
+//    public String addMessage(@RequestParam("fromId") int fromId,
+//                             @RequestParam("toId") int toId,
+//                             @RequestParam("content") String content) {
+//        try {
+//            Message msg = new Message();
+//            msg.setContent(content);
+//            msg.setFromId(fromId);
+//            msg.setToId(toId);
+//            msg.setCreatedDate(new Date());
+//            //msg.setConversationId(fromId < toId ? String.format("%d_%d", fromId, toId) : String.format("%d_%d", toId, fromId));
+//            messageService.addMessage(msg);
+//            return ToutiaoUtil.getJSONString(msg.getId());
+//        } catch (Exception e) {
+//            logger.error("增加评论失败" + e.getMessage());
+//            return ToutiaoUtil.getJSONString(1, "插入评论失败");
+//        }
+//    }
 }

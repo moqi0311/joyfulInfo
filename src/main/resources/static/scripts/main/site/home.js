@@ -54,8 +54,10 @@
     function fClickMsg() {
         var that = this;
         PopupMsg.show({
-            ok: function () {
-                window.location.replace("/msg/list");
+            listeners: {
+                ok: function () {
+                    window.location.replace("/msg/list");
+                }
             }
         });
     }

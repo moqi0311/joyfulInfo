@@ -11,7 +11,7 @@
 
             '<div class="form-group"> ',
             '<label >发给:</label>',
-            '<div class="js-email " ><input style="width:500px;" type="email" placeholder="姓名"></div>',
+            '<div  ><input class="js-email" style="width:500px;" type="email" placeholder="姓名"></div>',
             '</div>',
 
             '<div class="form-group">',
@@ -43,24 +43,31 @@
             handler: function (oEvent) {
                 oEvent.preventDefault();
                 var that = this;
-                // 值检查
-                if (!that.checkVal()) {
-                    return;
+                var oEl = that.getEl();
+                var sEmail = $.trim(oEl.find('input.js-email').val());
+                var sPwd = $.trim(oEl.find('textarea.js-pwd').val());
+
+                if (!sEmail) {
+                    return alert('请填写姓名');
                 }
-                alert("开始");
-                var oData = that.val();
+                if (!sPwd) {
+                    return alert('请填写私信内容');
+                }
+
+
                 $.ajax({
                     url: '/msg/addMessage',
                     type: 'post',
                     dataType: 'json',
                     data: {
-                        toName: oData.email,
-                        content: oData.pwd
+                        toName: sEmail,
+                        content: sPwd
                     }
                 }).done(function (oResult) {
+                    //alert(oResult.code);
                     if (oResult.code === 0) {
 //                        window.location.reload();
-                        that.emit('register');
+                        that.emit('ok');
                     } else if(oResult.code === 999){
                         //待会修改
                         window.location.href = '/reglogin?next=' + window.encodeURIComponent(window.location.href);

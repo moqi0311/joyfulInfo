@@ -119,7 +119,7 @@
         var oLogin = new PopupLogin(oConf);
         var oPopup = new Popup({
             width: 540,
-            title: '登录',
+            title: '注册/登录',
             content: oLogin.html()
         });
         oLogin._popup = oPopup;

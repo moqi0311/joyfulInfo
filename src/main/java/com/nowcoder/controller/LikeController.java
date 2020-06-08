@@ -43,7 +43,7 @@ public class LikeController {
 
         eventProducer.fireEvent(new EventModel(EventType.LIKE)
                 .setActorId(hostHolder.getUser().getId()).setEntityId(newsId)
-                .setEntityType(EntityType.ENTITY_NEWS).setEntityOwnerId(news.getUserId()));
+                .setEntityType(EntityType.ENTITY_NEWS).setEntityOwnerId(news.getUserId()).setExt("link", news.getLink()));
 
         return ToutiaoUtil.getJSONString(0, String.valueOf(likeCount));
     }

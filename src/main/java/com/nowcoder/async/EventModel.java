@@ -8,11 +8,11 @@ import java.util.Map;
  */
 public class EventModel {
     private EventType type;
-    private int actorId;
+    private int actorId;//触发者
+    private int entityId;  //事件编号
     private int entityType;
-    private int entityId;
-    private int entityOwnerId;
-    private Map<String, String> exts = new HashMap<String, String>();
+    private int entityOwnerId;//触发了谁
+    private Map<String, String> exts = new HashMap<>();//扩展信息
 
     public String getExt(String key) {
         return exts.get(key);

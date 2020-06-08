@@ -70,8 +70,9 @@
                         that.emit('ok');
                     } else if(oResult.code === 999){
                         //待会修改
-                        window.location.href = '/reglogin?next=' + window.encodeURIComponent(window.location.href);
+                        window.location.href = '/?pop=1' + window.encodeURIComponent(window.location.href);
                     } else {
+
                         oResult.msgname && alert(oResult.msgname);
                         oResult.msgpwd && alert(oResult.msgpwd);
                     }

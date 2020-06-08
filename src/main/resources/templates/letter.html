@@ -5,6 +5,7 @@
                 #foreach($conversation in $conversations)
                 <li id="conversation-item-10005_622873">
                     <a class="letter-link" href="/msg/detail?conversationId=$!{conversation.conversation.conversationId}"></a>
+
                     <div class="letter-info">
                         <span class="l-time">$!date.format('yyyy-MM-dd HH:mm:ss', $!{conversation.conversation.createdDate})</span>
                         <div class="l-operate-bar">
@@ -16,14 +17,18 @@
                             </a>
                         </div>
                     </div>
+
                     <div class="chat-headbox">
+                        #if($conversation.unread > 0)
                         <span class="msg-num">
                             $!{conversation.unread}
                         </span>
+                        #end
                         <a class="list-head" href="/user/$!{conversation.user.id}">
                             <img alt="头像" src="$!{conversation.user.headUrl}">
                         </a>
                     </div>
+
                     <div class="letter-detail">
                         <a title="$!{conversation.user.name}" class="letter-name level-color-1">
                             $!{conversation.user.name}
@@ -80,5 +85,6 @@
 
           })
         </script>
+        <script type="text/javascript" src="/scripts/main/site/detail.js"></script>
     </div>
 #parse("footer.html")

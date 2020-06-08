@@ -1,5 +1,9 @@
 package com.nowcoder.controller;
 
+import com.nowcoder.async.EventHandler;
+import com.nowcoder.async.EventModel;
+import com.nowcoder.async.EventProducer;
+import com.nowcoder.async.EventType;
 import com.nowcoder.dao.MessageDAO;
 import com.nowcoder.model.*;
 import com.nowcoder.service.MessageService;
@@ -17,9 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.util.HtmlUtils;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by nowcoder on 2016/7/9.
@@ -36,6 +38,9 @@ public class MessageController {
 
     @Autowired
     HostHolder hostHolder;
+
+    @Autowired
+    EventProducer eventProducer;
 
     @RequestMapping(path = {"/msg/list"}, method = {RequestMethod.GET})
     public String conversationDetail(Model model) {
@@ -76,6 +81,10 @@ public class MessageController {
                 messages.add(vo);
             }
             model.addAttribute("messages", messages);
+
+            //异步处理已读信息
+            eventProducer.fireEvent(new EventModel(EventType.MESSAGE)
+                    .setActorId(hostHolder.getUser().getId()).setExt("conversationId",conversationId));
         } catch (Exception e) {
             logger.error("获取详情消息失败" + e.getMessage());
         }
@@ -88,13 +97,16 @@ public class MessageController {
     public String addMessage(@RequestParam("toName") String toName,
                              @RequestParam("content") String content) {
         try {
+            Map<String, Object> map = new HashMap<>();
             if (hostHolder.getUser() == null) {
-                return ToutiaoUtil.getJSONString(999, "未登录");
+                map.put("msgname", "未登录");
+                return ToutiaoUtil.getJSONString(999, map);
             }
 
             User user = userService.selectByName(toName);
             if (user == null) {
-                return ToutiaoUtil.getJSONString(1, "用户不存在");
+                map.put("msgname", "用户不存在");
+                return ToutiaoUtil.getJSONString(1, map);
             }
 
             Message message = new Message();

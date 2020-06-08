@@ -28,8 +28,8 @@ public class LoginExceptionHandler implements EventHandler {
         // 判断是否有异常登陆
         Message message = new Message();
         message.setToId(model.getActorId());
-        message.setContent("你上次的登陆ip异常");
-        message.setFromId(3);
+        message.setContent(model.getExt("username")+ ",欢迎来到开心堂");
+        message.setFromId(2);
         message.setCreatedDate(new Date());
         messageService.addMessage(message);
 

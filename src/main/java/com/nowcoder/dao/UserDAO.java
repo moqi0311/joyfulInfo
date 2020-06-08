@@ -27,6 +27,9 @@ public interface UserDAO {
     @Update({"update ", TABLE_NAME, " set password=#{password} where id=#{id}"})
     void updatePassword(User user);
 
+    @Update({"update ", TABLE_NAME, " set name=#{name} where id=#{id}"})
+    void updateUserName(@Param("name") String name, @Param("id") int id);
+
     @Delete({"delete from ", TABLE_NAME, " where id=#{id}"})
     void deleteById(int id);
 }

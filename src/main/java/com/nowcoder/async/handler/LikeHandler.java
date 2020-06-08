@@ -28,7 +28,7 @@ public class LikeHandler implements EventHandler {
     @Override
     public void doHandle(EventModel model) {
         Message message = new Message();
-        message.setFromId(2);
+        message.setFromId(1);
         message.setToId(model.getEntityOwnerId());
 //        message.setToId(model.getActorId());
         User user = userService.getUser(model.getActorId());

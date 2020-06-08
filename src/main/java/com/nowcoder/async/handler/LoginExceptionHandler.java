@@ -29,7 +29,7 @@ public class LoginExceptionHandler implements EventHandler {
         Message message = new Message();
         message.setToId(model.getActorId());
         message.setContent(model.getExt("username")+ ",欢迎来到开心堂");
-        message.setFromId(2);
+        message.setFromId(1);
         message.setCreatedDate(new Date());
         messageService.addMessage(message);
 

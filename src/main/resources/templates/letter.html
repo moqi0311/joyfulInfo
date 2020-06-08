@@ -43,6 +43,34 @@
                 #end
             </ul>
 
+            #if($pages.size() > 1)
+            <div class="page">
+                #if ($curpage > 0)
+                #set($pre=$curpage + (-1))
+                <a href="$!{doman}$!{pre}">上一页</a>
+                #else
+                <span>上一页</span>
+                #end
+
+                #foreach($page in $pages)
+                #set($index=$page+1)
+                #if ($curpage == $page)
+                <a href="$!{doman}$!{page}"><b>$index</b></a>
+                #else
+                <a href="$!{doman}$!{page}">$index</a>
+                #end
+                #end
+
+                #if ($curpage < $lastpages)
+                #set($last=$curpage+1)
+                <a href="$!{doman}$!{last}">下一页</a>
+                #else
+                <span>下一页</span>
+                #end
+
+            </div>
+            #end
+
         </div>
         <script type="text/javascript">
           $(function(){

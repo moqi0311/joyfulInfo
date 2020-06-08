@@ -38,8 +38,8 @@ public class HomeController {
     @Autowired
     MailSender mailSender;
 
-    private int limit = 3;
-    private int pageShow = 5;
+    private int limit = 10;
+    private int pageShow = 7;
 
     private List<ViewObject> getNews(int userId, int offset, int limit) {
         List<News> newsList = newsService.getLatestNews(userId, offset, limit);

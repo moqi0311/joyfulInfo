@@ -29,6 +29,8 @@ import java.util.*;
 @Controller
 public class MessageController {
     private static final Logger logger = LoggerFactory.getLogger(MessageController.class);
+    private int limit = 10;
+    private int pageShow = 7;
 
     @Autowired
     MessageService messageService;
@@ -42,12 +44,13 @@ public class MessageController {
     @Autowired
     EventProducer eventProducer;
 
+
     @RequestMapping(path = {"/msg/list"}, method = {RequestMethod.GET})
-    public String conversationDetail(Model model) {
+    public String conversationDetail(Model model, @RequestParam(value = "index", defaultValue = "0") int index) {
         try {
             int localUserId = hostHolder.getUser().getId();
             List<ViewObject> conversations = new ArrayList<ViewObject>();
-            List<Message> conversationList = messageService.getConversationList(localUserId, 0, 10);
+            List<Message> conversationList = messageService.getConversationList(localUserId, index*limit, limit);
             for (Message msg : conversationList) {
                 ViewObject vo = new ViewObject();
                 vo.set("conversation", msg);
@@ -58,6 +61,14 @@ public class MessageController {
                 conversations.add(vo);
             }
             model.addAttribute("conversations", conversations);
+
+            //分页
+            List<Integer> pageList = messageService.getPagesList(localUserId, index, limit, pageShow);
+
+            model.addAttribute("doman", "/msg/list?index=");
+            model.addAttribute("pages", pageList);
+            model.addAttribute("curpage", index);
+            model.addAttribute("lastpages", pageList.get(pageList.size()-1));
         } catch (Exception e) {
             logger.error("获取站内信列表失败" + e.getMessage());
         }
@@ -65,9 +76,10 @@ public class MessageController {
     }
 
     @RequestMapping(path = {"/msg/detail"}, method = {RequestMethod.GET})
-    public String conversationDetail(Model model, @Param("conversationId") String conversationId) {
+    public String conversationDetail(Model model, @Param("conversationId") String conversationId ,
+                                     @RequestParam(value = "index", defaultValue = "0") int index) {
         try {
-            List<Message> conversationList = messageService.getConversationDetail(conversationId, 0, 10);
+            List<Message> conversationList = messageService.getConversationDetail(conversationId, index*limit, limit);
             List<ViewObject> messages = new ArrayList<>();
             for (Message msg : conversationList) {
                 ViewObject vo = new ViewObject();
@@ -85,6 +97,15 @@ public class MessageController {
             //异步处理已读信息
             eventProducer.fireEvent(new EventModel(EventType.MESSAGE)
                     .setActorId(hostHolder.getUser().getId()).setExt("conversationId",conversationId));
+
+
+            //分页
+            List<Integer> pageList = messageService.getPagesList(conversationId, index, limit, pageShow);
+
+            model.addAttribute("doman", "/msg/detail?conversationId="+conversationId+"&index=");
+            model.addAttribute("pages", pageList);
+            model.addAttribute("curpage", index);
+            model.addAttribute("lastpages", pageList.get(pageList.size()-1));
         } catch (Exception e) {
             logger.error("获取详情消息失败" + e.getMessage());
         }

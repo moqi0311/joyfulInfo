@@ -30,6 +30,12 @@ public interface MessageDAO {
     List<Message> getConversationList(@Param("userId") int userId,
                                       @Param("offset") int offset, @Param("limit") int limit);
 
+    @Select({"select count(id) from (SELECT count(id) as id from ", TABLE_NAME ,"WHERE from_id = #{userId} or to_id = #{userId} group by conversation_id ) t1"})
+    int selectCountByUserId(@Param("userId") int userId);
+
+    @Select({"select count(id) from ", TABLE_NAME ,"WHERE conversation_id = #{conversationId}"})
+    int selectCountByConversationId(@Param("conversationId") String conversationId);
+
     @Update({"update ", TABLE_NAME, "set has_read = 1 where has_read=0 and to_id=#{userId} and conversation_id=#{conversationId}"})
     void updateHasRead(@Param("userId") int userId, @Param("conversationId") String conversationId);
 }

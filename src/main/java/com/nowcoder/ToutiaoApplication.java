@@ -16,3 +16,4 @@ public class ToutiaoApplication extends SpringBootServletInitializer {
         SpringApplication.run(ToutiaoApplication.class, args);
     }
 }
+

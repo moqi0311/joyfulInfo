@@ -103,7 +103,7 @@ public class HomeController {
         model.addAttribute("lastpages", pageList.get(pageList.size()-1));
 
         //个人资讯主页
-        model.addAttribute("user", 1);
+        //model.addAttribute("user", 1);
 
         return "home";
     }

@@ -36,6 +36,7 @@ public class InitDatabaseTests {
 
     @Test
     public void initData() {
+        if(true) return;
         Random random = new Random();
         for (int i = 0; i < 11; ++i) {
             User user = new User();

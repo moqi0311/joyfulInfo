@@ -269,5 +269,10 @@ public class MultiThread {
         //testThreadLocal();
         //testExecutor();
         testFutrue();
+
+
+        ConcurrentHashMap<Integer,Integer> memo = new ConcurrentHashMap<>();
+        memo.put(1,1);
+        memo.get(1);
     }
 }

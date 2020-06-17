@@ -52,6 +52,10 @@ public class SensitiveService implements InitializingBean {
             return subNodes.get(key);
         }
 
+        /**
+         * 是否结尾
+         * @return
+         */
         boolean isKeywordEnd() {
             return end;
         }

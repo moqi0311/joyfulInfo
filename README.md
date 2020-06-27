@@ -59,3 +59,9 @@ group by conversation_id
 order by created_date desc 
 limit 0,10
 ```
+
+#### 7. redis异步事件处理增加线程池
+* 利用redis的列表作为事件存储，通过brpop阻塞线程运行
+* 每有一个事件产生时，利用CashThreadPool新开一个线程（CashThreadPool适合并发短小任务）
+* 通过JConsole检测结果如下：
+![检测结果](http://qiniu.cameree.com/blog/1593223027164.png)

@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created by nowcoder on 2016/7/16.
@@ -45,30 +47,36 @@ public class EventConsumer implements InitializingBean, ApplicationContextAware 
             }
         }
 
+
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 while (true) {
                     String key = RedisKeyUtil.getEventQueueKey();
                     List<String> events = jedisAdapter.brpop(0, key);
-                    for (String message : events) {
-                        if (message.equals(key)) {
-                            continue;
-                        }
 
-                        EventModel eventModel = JSON.parseObject(message, EventModel.class);
-                        if (!config.containsKey(eventModel.getType())) {
-                            logger.error("不能识别的事件");
-                            continue;
-                        }
+                    ExecutorService executorService = Executors.newCachedThreadPool();
+                    executorService.execute(()->{
+                        for (String message : events) {
+                            if (message.equals(key)) {
+                                continue;
+                            }
 
-                        for (EventHandler handler : config.get(eventModel.getType())) {
-                            handler.doHandle(eventModel);
+                            EventModel eventModel = JSON.parseObject(message, EventModel.class);
+                            if (!config.containsKey(eventModel.getType())) {
+                                logger.error("不能识别的事件");
+                                continue;
+                            }
+
+                            for (EventHandler handler : config.get(eventModel.getType())) {
+                                handler.doHandle(eventModel);
+                            }
                         }
-                    }
+                    });
+
                 }
             }
-        });
+        }, "EventConsumer");
         thread.start();
     }
 

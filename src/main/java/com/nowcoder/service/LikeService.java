@@ -13,6 +13,13 @@ public class LikeService {
     @Autowired
     JedisAdapter jedisAdapter;
 
+    /**
+     * 获取自己是否点赞
+     * @param userId
+     * @param entityType
+     * @param entityId
+     * @return
+     */
     public int getLikeStatus(int userId, int entityType, int entityId) {
         String likeKey = RedisKeyUtil.getLikeKey(entityId, entityType);
         if(jedisAdapter.sismember(likeKey, String.valueOf(userId))) {
@@ -22,6 +29,13 @@ public class LikeService {
         return jedisAdapter.sismember(disLikeKey, String.valueOf(userId)) ? -1 : 0;
     }
 
+    /**
+     * 往某条redis的key写入自己的id
+     * @param userId
+     * @param entityType
+     * @param entityId
+     * @return
+     */
     public long like(int userId, int entityType, int entityId) {
         // 在喜欢集合里增加
         String likeKey = RedisKeyUtil.getLikeKey(entityId, entityType);

@@ -1,7 +1,5 @@
-[toc]
-
 ### 一、建立目的
-学习牛客网的中级项目，并利用这个逐步搭建自己的一个网站，用来收集一些有趣、好玩的信息供大家和自己搬砖间隙放松。
+学习牛客网的中级项目——仿今日头条资讯网站，并利用这个逐步搭建自己的一个网站，用来收集一些有趣、好玩的信息供大家和自己搬砖间隙放松。
 
 ### 二、知识点整理
 见学习的知识点
@@ -36,12 +34,12 @@
 #### 5. 分页显示
 * 分页前端代码参考：[百度经验](https://jingyan.baidu.com/article/19192ad804c81fe53e57072e.html)
 * 主页分页前后端完成：可以在HomeController中设置一次显示多少个资讯（limit），也可以设置显示几个分页（pageShow）
-* 站内信的列表和详情均分页实现
+* 站内信的列表和详情均类似分页实现
 
 #### 6. 站内信消息
 * 增加发送消息按钮和对话框，实现前后端事件绑定
 * 阅读详情后通过异步处理，将mysql中已读数字更新
-* 进入站内信时，sql语句应该获取最新的内容到前端显示，但排序后并没有效果，语句如下：
+* 进入站内信时，MySQL语句应该获取最新的内容到前端显示，但排序后并没有效果，语句如下：
 ```sql
 select from_id, to_id, content, has_read, conversation_id, created_date, count(id) as id 
 from ( select * from message where from_id= 3 or to_id=3 order by id desc) tt 
@@ -51,7 +49,7 @@ limit 0,10
 ```
 **原因**： sql查询优化时在外层有group by时将里层的order by给忽视了，导致取到的都是插入到数据库的第一条信息。
 
-**更改** 里层加一个limit,参考：[手把手教你如何玩转Mysql分组取每组最新的一条数据](https://blog.csdn.net/Cs_hnu_scw/article/details/105397337)
+**更改**： 里层加一个limit,参考：[手把手教你如何玩转Mysql分组取每组最新的一条数据](https://blog.csdn.net/Cs_hnu_scw/article/details/105397337)
 ```sql
 select from_id, to_id, content, has_read, conversation_id, created_date, count(id) as id 
 from ( select * from message where from_id= 3 or to_id=3 order by id desc LIMIT 1000000) tt 
@@ -59,6 +57,9 @@ group by conversation_id
 order by created_date desc 
 limit 0,10
 ```
+**更新**： limit起作用是由于里层的子查询需要先排序再获取限制行数显示，这个时候优化器无法对其优化，因此能正常显示。但这样会有明显的问题，我这里虽然limit虽然足够大，目前业务量下，因此不会出现页面获取失败，但是存在风险的。可以采取的策略有：
+ 1. 先统计站内信总数，然后在limit限制，需要两条查询语句;
+ 2. 建立一个只包含最新消息的临时表，然后内部联结。
 
 #### 7. redis异步事件处理增加线程池
 * 利用redis的列表作为事件存储，通过brpop阻塞线程运行

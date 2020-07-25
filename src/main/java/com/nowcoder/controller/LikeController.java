@@ -37,9 +37,10 @@ public class LikeController {
     @ResponseBody
     public String like(@Param("newId") int newsId) {
         long likeCount = likeService.like(hostHolder.getUser().getId(), EntityType.ENTITY_NEWS, newsId);
-        // 更新喜欢数
+        // 异步更新喜欢数
+        eventProducer.fireEvent(new EventModel(EventType.LIKESQL).setEntityId(newsId).setExt("likeCount", String.valueOf(likeCount)));
+
         News news = newsService.getById(newsId);
-        newsService.updateLikeCount(newsId, (int) likeCount);
 
         eventProducer.fireEvent(new EventModel(EventType.LIKE)
                 .setActorId(hostHolder.getUser().getId()).setEntityId(newsId)
@@ -52,8 +53,9 @@ public class LikeController {
     @ResponseBody
     public String dislike(@Param("newId") int newsId) {
         long likeCount = likeService.disLike(hostHolder.getUser().getId(), EntityType.ENTITY_NEWS, newsId);
-        // 更新喜欢数
-        newsService.updateLikeCount(newsId, (int) likeCount);
+        // 异步更新喜欢数
+        eventProducer.fireEvent(new EventModel(EventType.LIKESQL).setEntityId(newsId).setExt("likeCount", String.valueOf(likeCount)));
+
         return ToutiaoUtil.getJSONString(0, String.valueOf(likeCount));
     }
 }

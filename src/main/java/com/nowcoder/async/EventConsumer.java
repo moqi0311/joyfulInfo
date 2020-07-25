@@ -48,6 +48,7 @@ public class EventConsumer implements InitializingBean, ApplicationContextAware 
         }
 
 
+        ExecutorService executorService = Executors.newCachedThreadPool();
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -55,7 +56,6 @@ public class EventConsumer implements InitializingBean, ApplicationContextAware 
                     String key = RedisKeyUtil.getEventQueueKey();
                     List<String> events = jedisAdapter.brpop(0, key);
 
-                    ExecutorService executorService = Executors.newCachedThreadPool();
                     executorService.execute(()->{
                         for (String message : events) {
                             if (message.equals(key)) {

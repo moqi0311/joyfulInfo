@@ -5,10 +5,12 @@ import com.nowcoder.async.EventModel;
 import com.nowcoder.async.EventType;
 import com.nowcoder.service.NewsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.List;
 
+@Component
 public class RefreashSQLHandle implements EventHandler {
 
     @Autowired
